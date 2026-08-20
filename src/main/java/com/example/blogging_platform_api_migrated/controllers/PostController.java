@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class PostController {
 
@@ -30,6 +32,22 @@ public class PostController {
             @PathVariable int id, @RequestBody PostRequestDto postRequestDto) {
         return ResponseEntity
                 .ok().body(postService.updatePost(postRequestDto, id));
+    }
+
+    @DeleteMapping("/posts/{id}")
+    public ResponseEntity<PostResponseDto> deletePost(@PathVariable int id) {
+        postService.deletePost(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<PostResponseDto> getPostById(@PathVariable int id) {
+        return ResponseEntity.ok().body(postService.getPostById(id));
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+        return ResponseEntity.ok().body(postService.getPosts());
     }
 
 }

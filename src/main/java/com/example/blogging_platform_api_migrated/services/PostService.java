@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,6 +81,26 @@ public class PostService {
             throw new NoSuchPostException("No such post with id: " + id);
         }
         return true;
+    }
+
+    @Transactional
+    public PostResponseDto getPostById(int id) {
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if(optionalPost.isPresent()) {
+            return mapPostToResponseDto(optionalPost.get());
+        } else {
+            throw new NoSuchPostException("No such post with id: " + id);
+        }
+    }
+
+    @Transactional
+    public List<PostResponseDto> getPosts() {
+        List<PostResponseDto> posts = new ArrayList<>();
+        List<Post> postList = (List<Post>) postRepository.findAll();
+        for(Post post : postList) {
+            posts.add(mapPostToResponseDto(post));
+        }
+        return posts;
     }
 
 }

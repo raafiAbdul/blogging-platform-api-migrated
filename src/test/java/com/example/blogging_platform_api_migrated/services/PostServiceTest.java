@@ -4,6 +4,7 @@ import com.example.blogging_platform_api_migrated.BloggingPlatformApiMigratedApp
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
+import com.example.blogging_platform_api_migrated.models.Post;
 import com.example.blogging_platform_api_migrated.repositories.PostRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
 
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
@@ -96,5 +99,21 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
         });
     }
 
+    @Test
+    void testGetPostByIdHappyFlow() {
+        assertEquals("My Second Blog Post", postService.getPostById(2).getTitle());
+    }
+
+    @Test
+    void testGetPostByIdErrorFlow() {
+        assertThrows(NoSuchPostException.class, () -> {
+            postService.getPostById(100);
+        });
+    }
+
+    @Test
+    void testGetAllPostsHappyFlow() {
+        assertEquals(5, ((List<Post>) postRepository.findAll()).size());
+    }
 
 }
