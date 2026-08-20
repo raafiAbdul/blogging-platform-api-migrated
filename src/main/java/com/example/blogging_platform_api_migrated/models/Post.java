@@ -35,11 +35,17 @@ public class Post {
 
     public Post() {}
 
-    public Post(String title, String content, String category, String[] tags) {
+    public Post(
+            String title, String content,
+            String category, String[] tags,
+            OffsetDateTime createdAt,
+            OffsetDateTime updatedAt) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.tags = tags;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getContent() {
@@ -84,5 +90,9 @@ public class Post {
 
     public void setTags(String[] tags) {
         this.tags = tags;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

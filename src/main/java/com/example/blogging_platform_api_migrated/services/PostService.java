@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
+
 @Service
 public class PostService {
 
@@ -18,12 +20,16 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
-    private Post mapRequestDtoToPost(PostRequestDto postRequestDto) {
+    private Post mapRequestDtoToPost(
+            PostRequestDto postRequestDto,
+            OffsetDateTime createdAt,
+            OffsetDateTime updatedAt) {
         return new Post(
                 postRequestDto.getTitle(),
                 postRequestDto.getContent(),
                 postRequestDto.getCategory(),
-                postRequestDto.getTags()
+                postRequestDto.getTags(),
+                createdAt, updatedAt
         );
     }
 
@@ -41,7 +47,8 @@ public class PostService {
 
     @Transactional
     public PostResponseDto addPost(PostRequestDto postRequestDto) {
-        Post post = mapRequestDtoToPost(postRequestDto);
+        OffsetDateTime now = OffsetDateTime.now();
+        Post post = mapRequestDtoToPost(postRequestDto, now, now);
         postRepository.save(post);
         return mapPostToResponseDto(post);
     }

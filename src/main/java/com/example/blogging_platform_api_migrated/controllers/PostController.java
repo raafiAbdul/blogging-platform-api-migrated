@@ -1,6 +1,7 @@
 package com.example.blogging_platform_api_migrated.controllers;
 
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
+import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,8 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping
-    public ResponseEntity<?> addPost(@RequestBody PostRequestDto postRequestDto) {
+    @PostMapping("/posts")
+    public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto postRequestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(postService.addPost(postRequestDto));
