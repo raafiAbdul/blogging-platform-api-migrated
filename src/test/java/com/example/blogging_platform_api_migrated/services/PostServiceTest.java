@@ -51,19 +51,12 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Test
     void testUpdatePostHappyFlow() {
-        PostRequestDto oldRequest = new PostRequestDto(
-                "Old Title",
-                "Old Content",
-                "Old Category",
-                new String[]{"Old", "Tags"}
-        );
         PostRequestDto newRequest = new PostRequestDto(
                 "New Title",
                 "New Content",
                 "New Category",
                 new String[]{"New", "Tags"}
         );
-        postService.addPost(oldRequest);
         PostResponseDto response = postService.updatePost(newRequest, 5);
 
         assertAll(

@@ -58,7 +58,9 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(PostRequestDto postRequestDto, int id) {
         OffsetDateTime now = OffsetDateTime.now();
-        Post post = postRepository.findById(id).orElseThrow(NoSuchPostException::new);
+        Post post = postRepository.findById(id).orElseThrow(() -> {
+            throw new NoSuchPostException("No such post with id: " + id);
+        });
 
         post.setTitle(postRequestDto.getTitle());
         post.setContent(postRequestDto.getContent());

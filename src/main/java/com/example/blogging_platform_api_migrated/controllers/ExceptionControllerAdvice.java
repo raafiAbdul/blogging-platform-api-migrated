@@ -27,6 +27,10 @@ public class ExceptionControllerAdvice {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(violations);
         }
 
+        if(rootCause instanceof NoSuchPostException n) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(n.getDetails());
+        }
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
