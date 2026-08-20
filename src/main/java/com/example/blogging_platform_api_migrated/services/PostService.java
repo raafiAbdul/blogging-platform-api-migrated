@@ -66,7 +66,10 @@ public class PostService {
         post.setTags(postRequestDto.getTags());
         post.setUpdatedAt(now);
 
-        return  mapPostToResponseDto(postRepository.save(post));
+        return  mapPostToResponseDto(post);
     }
+
+    //@Transactional
+    //public PostResponseDto deletePost(int id) {}
 
 }

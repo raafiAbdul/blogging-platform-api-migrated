@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class BloggingPlatformApiMigratedApplicationTests {
 
 	@Autowired
-	PostRepository postRepository;
+	public PostRepository postRepository;
 
 	public static OffsetDateTime updateTime =  OffsetDateTime.of(
 			2005, 06, 20, 8, 0, 0, 0,

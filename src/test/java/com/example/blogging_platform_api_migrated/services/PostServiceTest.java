@@ -6,6 +6,7 @@ import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionSystemException;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,6 +28,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
         PostResponseDto response = postService.addPost(request);
 
         assertAll(
+                () -> assertEquals(5, postRepository.count()),
                 () -> assertEquals("New Title", response.getTitle()),
                 () -> assertEquals("New Content", response.getContent()),
                 () -> assertEquals("New Category", response.getCategory()),
@@ -47,6 +49,43 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
         });
     }
 
+    @Test
+    void testUpdatePostHappyFlow() {
+        PostRequestDto oldRequest = new PostRequestDto(
+                "Old Title",
+                "Old Content",
+                "Old Category",
+                new String[]{"Old", "Tags"}
+        );
+        PostRequestDto newRequest = new PostRequestDto(
+                "New Title",
+                "New Content",
+                "New Category",
+                new String[]{"New", "Tags"}
+        );
+        postService.addPost(oldRequest);
+        PostResponseDto response = postService.updatePost(newRequest, 5);
+
+        assertAll(
+                () -> assertEquals(5, postRepository.count()),
+                () -> assertEquals("New Title", response.getTitle()),
+                () -> assertEquals("New Content", response.getContent()),
+                () -> assertEquals("New Category", response.getCategory()),
+                () -> assertArrayEquals(new String[]{"New", "Tags"}, response.getTags()),
+                () -> assertEquals(5, response.getId())
+        );
+    }
+
+    @Test
+    void testUpdatePostErrorFlow() {
+        PostRequestDto invalidRequest = new PostRequestDto(
+                "h", "e", "l", null
+        );
+
+        assertThrows(TransactionSystemException.class, () -> {
+            postService.updatePost(invalidRequest, 1);
+        });
+    }
 
 
 }
