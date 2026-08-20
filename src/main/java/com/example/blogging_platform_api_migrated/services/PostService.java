@@ -71,7 +71,14 @@ public class PostService {
         return  mapPostToResponseDto(post);
     }
 
-    //@Transactional
-    //public PostResponseDto deletePost(int id) {}
+    @Transactional
+    public boolean deletePost(int id) {
+        if(postRepository.existsById(id)) {
+            postRepository.deleteById(id);
+        } else {
+            throw new NoSuchPostException("No such post with id: " + id);
+        }
+        return true;
+    }
 
 }

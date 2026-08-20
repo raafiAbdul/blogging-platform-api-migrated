@@ -3,13 +3,17 @@ package com.example.blogging_platform_api_migrated.services;
 import com.example.blogging_platform_api_migrated.BloggingPlatformApiMigratedApplicationTests;
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
+import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
+import com.example.blogging_platform_api_migrated.repositories.PostRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
 
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
 
 class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
@@ -77,6 +81,18 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
         assertThrows(TransactionSystemException.class, () -> {
             postService.updatePost(invalidRequest, 1);
+        });
+    }
+
+    @Test
+    void testDeletePostHappyFlow() {
+        assertTrue(postService.deletePost(3));
+    }
+
+    @Test
+    void testDeletePostErrorFlow() {
+        assertThrows(NoSuchPostException.class, () -> {
+            postService.deletePost(100);
         });
     }
 
