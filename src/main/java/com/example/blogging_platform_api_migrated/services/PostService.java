@@ -2,6 +2,7 @@ package com.example.blogging_platform_api_migrated.services;
 
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
+import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
 import com.example.blogging_platform_api_migrated.models.Post;
 import com.example.blogging_platform_api_migrated.repositories.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @Service
 public class PostService {
@@ -37,8 +39,8 @@ public class PostService {
         return new PostResponseDto(
                 post.getId(),
                 post.getTitle(),
-                post.getCategory(),
                 post.getContent(),
+                post.getCategory(),
                 post.getTags(),
                 post.getCreatedAt(),
                 post.getUpdatedAt()
@@ -53,6 +55,18 @@ public class PostService {
         return mapPostToResponseDto(post);
     }
 
+    @Transactional
+    public PostResponseDto updatePost(PostRequestDto postRequestDto, int id) {
+        OffsetDateTime now = OffsetDateTime.now();
+        Post post = postRepository.findById(id).orElseThrow(NoSuchPostException::new);
 
+        post.setTitle(postRequestDto.getTitle());
+        post.setContent(postRequestDto.getContent());
+        post.setCategory(postRequestDto.getCategory());
+        post.setTags(postRequestDto.getTags());
+        post.setUpdatedAt(now);
+
+        return  mapPostToResponseDto(postRepository.save(post));
+    }
 
 }

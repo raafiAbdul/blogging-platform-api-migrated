@@ -6,9 +6,7 @@ import com.example.blogging_platform_api_migrated.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class PostController {
@@ -26,4 +24,12 @@ public class PostController {
                 .status(HttpStatus.CREATED)
                 .body(postService.addPost(postRequestDto));
     }
+
+    @PutMapping("/posts/{id}")
+    public ResponseEntity<PostResponseDto> updatePost(
+            @PathVariable int id, @RequestBody PostRequestDto postRequestDto) {
+        return ResponseEntity
+                .ok().body(postService.updatePost(postRequestDto, id));
+    }
+
 }

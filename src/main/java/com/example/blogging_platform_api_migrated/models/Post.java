@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts")
@@ -94,5 +96,24 @@ public class Post {
 
     public void setUpdatedAt(OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Post post = (Post) o;
+        return id == post.id;
+    }
+
+    @Override
+    public String toString() {
+        return "{id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", category='" + category + '\'' +
+                ", tags=" + "[" + Arrays.asList(tags).toString() + "]" +
+                ", created_at=" + createdAt.toString() +
+                ", updated_at=" + updatedAt.toString();
     }
 }
