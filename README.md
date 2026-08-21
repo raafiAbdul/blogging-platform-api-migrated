@@ -8,7 +8,7 @@ RESTful CRUD API built with Spring Boot, Spring Data JPA, and PostgreSQL
 
 ## Key Technical Insights
 - Migrated from Spring Data JDBC to Spring Data JPA
-- Used fetch keyword in JPQL query for a custom function to mitigate the N+1 problem.
+- Used ```FETCH``` keyword in JPQL query for a custom function to mitigate the N+1 problem.
 - Used @ElementCollection annotation instead of Java's primitive array type to allow JPQL querying for portability.
 
 ## Prerequisites
