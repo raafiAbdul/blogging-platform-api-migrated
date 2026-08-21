@@ -7,8 +7,9 @@ import jakarta.validation.constraints.Size;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 
-@Entity
+@Entity(name = "Post")
 @Table(name = "posts")
 public class Post {
     @Id
@@ -33,13 +34,21 @@ public class Post {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    private String[] tags;
+    // declares that this is a collection of primitive Java types
+    @ElementCollection
+    // creates another table called post_tags that has a column named post_id
+    // containing the foreign key mapped to the @Id annotated attribute of the
+    // parent class
+    @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    // names the column that stores the actual collection of text tags
+    @Column(name = "tags")
+    private Set<String> tags;
 
     public Post() {}
 
     public Post(
             String title, String content,
-            String category, String[] tags,
+            String category, Set<String> tags,
             OffsetDateTime createdAt,
             OffsetDateTime updatedAt) {
         this.title = title;
@@ -58,7 +67,7 @@ public class Post {
         return category;
     }
 
-    public String[] getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
@@ -90,7 +99,7 @@ public class Post {
         this.content = content;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 
@@ -112,7 +121,7 @@ public class Post {
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", category='" + category + '\'' +
-                ", tags=" + "[" + Arrays.asList(tags).toString() + "]" +
+                ", tags=" + "[" + tags.toString() + "]" +
                 ", created_at=" + createdAt.toString() +
                 ", updated_at=" + updatedAt.toString();
     }

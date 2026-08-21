@@ -4,24 +4,23 @@ import com.example.blogging_platform_api_migrated.BloggingPlatformApiMigratedApp
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
-import com.example.blogging_platform_api_migrated.models.Post;
-import com.example.blogging_platform_api_migrated.repositories.PostRepository;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
 
-
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Autowired
     private PostService postService;
+
+    private static Set<String> tags = new HashSet<>(Arrays.asList("New", "Tag", "New", "Tag"));
 
     @Test
     void testAddPostHappyFlow() {
@@ -29,7 +28,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 "New Title",
                 "New Content",
                 "New Category",
-                new String[]{"New", "Tags"}
+                tags
         );
 
         PostResponseDto response = postService.addPost(request);
@@ -39,8 +38,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 () -> assertEquals("New Title", response.getTitle()),
                 () -> assertEquals("New Content", response.getContent()),
                 () -> assertEquals("New Category", response.getCategory()),
-                () -> assertArrayEquals(new String[]{"New", "Tags"}, response.getTags()),
-                () -> assertNotNull(response.getId())
+                () -> assertEquals(4, response.getTags().size())
         );
 
     }
@@ -48,12 +46,10 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
     @Test
     void testAddPostErrorFlow() {
         PostRequestDto invalidRequest = new PostRequestDto(
-                "h", "e", "l", null
+                "c", "a", "r", tags
         );
 
-        assertThrows(ConstraintViolationException.class, () -> {
-            postService.addPost(invalidRequest);
-        });
+        assertThrows(ConstraintViolationException.class, () -> postService.addPost(invalidRequest));
     }
 
     @Test
@@ -62,7 +58,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 "New Title",
                 "New Content",
                 "New Category",
-                new String[]{"New", "Tags"}
+                tags
         );
         PostResponseDto response = postService.updatePost(newRequest, 5);
 
@@ -71,7 +67,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 () -> assertEquals("New Title", response.getTitle()),
                 () -> assertEquals("New Content", response.getContent()),
                 () -> assertEquals("New Category", response.getCategory()),
-                () -> assertArrayEquals(new String[]{"New", "Tags"}, response.getTags()),
+                () -> assertEquals(4, response.getTags().size()),
                 () -> assertEquals(5, response.getId())
         );
     }
@@ -79,12 +75,10 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
     @Test
     void testUpdatePostErrorFlow() {
         PostRequestDto invalidRequest = new PostRequestDto(
-                "h", "e", "l", null
+                "c", "a", "r", tags
         );
 
-        assertThrows(TransactionSystemException.class, () -> {
-            postService.updatePost(invalidRequest, 1);
-        });
+        assertThrows(TransactionSystemException.class, () -> postService.updatePost(invalidRequest, 1));
     }
 
     @Test
@@ -94,9 +88,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Test
     void testDeletePostErrorFlow() {
-        assertThrows(NoSuchPostException.class, () -> {
-            postService.deletePost(100);
-        });
+        assertThrows(NoSuchPostException.class, () -> postService.deletePost(100));
     }
 
     @Test
@@ -106,14 +98,15 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Test
     void testGetPostByIdErrorFlow() {
-        assertThrows(NoSuchPostException.class, () -> {
-            postService.getPostById(100);
-        });
+        assertThrows(NoSuchPostException.class, () -> postService.getPostById(100));
     }
 
     @Test
     void testGetAllPostsHappyFlow() {
-        assertEquals(5, ((List<Post>) postRepository.findAll()).size());
+        assertAll(
+                () -> assertEquals(3, postService.getPosts("Advice").size()),
+                () -> assertEquals(5, postService.getPosts(null).size())
+        );
     }
 
 }

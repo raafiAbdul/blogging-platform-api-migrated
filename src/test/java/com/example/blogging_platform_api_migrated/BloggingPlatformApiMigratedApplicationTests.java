@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 @SpringBootTest
@@ -37,7 +39,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 				"My First Blog Post",
 				"Not much to see here...",
 				"Boring",
-				new String[] {"Chill", "Relaxed"},
+				new HashSet<>(Arrays.asList("Chill", "Relaxed", "Nothing")),
 				OffsetDateTime.now(),
 				OffsetDateTime.now().plusDays(2).plusHours(5).plusMinutes(39)
 		);
@@ -45,7 +47,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 				"My Second Blog Post",
 				"Still not much to see here...",
 				"More Boredom",
-				new String[] {"Quiet", "Crickets"},
+				new HashSet<>(Arrays.asList("Quiet", "Crickets")),
 				OffsetDateTime.now().plusMinutes(5),
 				OffsetDateTime.now().plusDays(4).plusHours(13)
 		);
@@ -54,7 +56,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 				"Never stop learning. Because if you stop learning" +
 						"You stop living",
 				"Inspirational",
-				new String[] {"ThinkMore", "StayAlive"},
+				new HashSet<>(Arrays.asList("ThinkMore", "StayAlive", "Advice")),
 				OffsetDateTime.now().minusHours(6),
 				OffsetDateTime.now().plusMonths(3)
 		);
@@ -63,7 +65,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 				"If you are going camping," +
 						" set your voicemail to where you are camping.",
 				"Advice",
-				new String[] {"KeepSafe", "Helpful"},
+				new HashSet<>(Arrays.asList("KeepSafe", "Helpful")),
 				OffsetDateTime.now().minusYears(5),
 				OffsetDateTime.now().minusYears(5).plusHours(10)
 		);
@@ -73,7 +75,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 						"show that companies can trust you." +
 						" Build. More. Proof.",
 				"Advice",
-				new String[]{"Business", "JobHunting"},
+				new HashSet<>(Arrays.asList("Business", "JobHunting")),
 				OffsetDateTime.now().minusYears(3),
 				OffsetDateTime.now().minusYears(2)
 		);

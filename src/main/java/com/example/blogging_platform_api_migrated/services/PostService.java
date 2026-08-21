@@ -10,9 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostService {
@@ -94,11 +92,16 @@ public class PostService {
     }
 
     @Transactional
-    public List<PostResponseDto> getPosts() {
+    public List<PostResponseDto> getPosts(String term) {
         List<PostResponseDto> posts = new ArrayList<>();
-        List<Post> postList = (List<Post>) postRepository.findAll();
-        for(Post post : postList) {
-            posts.add(mapPostToResponseDto(post));
+
+        if(term == null || term.isEmpty()) {
+            List<Post> postList = (List<Post>) postRepository.findAll();
+            for(Post post : postList) {
+                posts.add(mapPostToResponseDto(post));
+            }
+        } else {
+            postRepository.findByTerm(term).forEach(post -> posts.add(mapPostToResponseDto(post)));
         }
         return posts;
     }
