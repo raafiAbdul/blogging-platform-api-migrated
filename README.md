@@ -40,12 +40,12 @@ DB_PASSWORD = your_password
 ```
 
 ## API Endpoints
-```POST /posts``` Creates a new post
-```PUT /posts/{id}``` Updates a blog post
-```DELETE /posts/{id}``` Deletes a blog post
-```GET /posts``` Retrieves all blog posts
-```GET /posts/{id}``` Finds the blog post with that id
-```GET /posts?term={keyword}``` Finds posts with said keyword
+- ```POST /posts``` Creates a new post
+- ```PUT /posts/{id}``` Updates a blog post
+- ```DELETE /posts/{id}``` Deletes a blog post
+- ```GET /posts``` Retrieves all blog posts
+- ```GET /posts/{id}``` Finds the blog post with that id
+- ```GET /posts?term={keyword}``` Finds posts with said keyword
 
 ## Sample Usage and Diagrams
 ### Creating a Blog
