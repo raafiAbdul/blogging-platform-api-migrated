@@ -1,7 +1,7 @@
-# Blogging Platform API
+# Blogging Platform API Migrated
 RESTful CRUD API built with Spring Boot, Spring Data JPA, and PostgreSQL. My second take on
 the [Blogging Platform API](https://roadmap.sh/projects/blogging-platform-api) beginner project
-from [roadmaps](https://roadmap.sh/).
+from [roadmap](https://roadmap.sh/).
 
 ## Technologies used
 - **Language:** Java 17+
