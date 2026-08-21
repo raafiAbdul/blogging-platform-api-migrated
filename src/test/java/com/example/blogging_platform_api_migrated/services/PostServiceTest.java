@@ -108,7 +108,13 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 () -> assertEquals(5, postService.getPosts(null).size()),
                 () -> assertEquals(5, postService.getPosts("").size()),
                 () -> assertEquals(2, postService.getPosts("Business")
-                        .getFirst().getTags().size())
+                        .getFirst().getTags().size()),
+                () -> assertTrue(
+                        postService.getPosts("Advice")
+                                .get(1).getTags().iterator().next().equals("KeepSafe") ||
+                                postService.getPosts("Advice").get(1)
+                                        .getTags().iterator().next().equals("Helpful")
+                )
         );
     }
 
