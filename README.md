@@ -73,7 +73,7 @@ DB_PASSWORD = your_password
   "details": "No such post with id: 999"
 }
 ```
-```400 Bad Request```
+```404 Not Found```
 
 ### Postman Sample
 ![Postman Sample](postman-sample.png)
