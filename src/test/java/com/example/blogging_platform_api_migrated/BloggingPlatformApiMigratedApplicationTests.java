@@ -37,7 +37,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 		List<Post> posts = new ArrayList<>();
 		Post post1 = new Post(
 				"My First Blog Post",
-				"Not much to see here...",
+				"Not much to see here... (Common)",
 				"Boring",
 				new HashSet<>(Arrays.asList("Chill", "Relaxed", "Nothing")),
 				OffsetDateTime.now(),
@@ -45,7 +45,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 		);
 		Post post2 = new Post(
 				"My Second Blog Post",
-				"Still not much to see here...",
+				"Still not much to see here... (Common)",
 				"More Boredom",
 				new HashSet<>(Arrays.asList("Quiet", "Crickets")),
 				OffsetDateTime.now().plusMinutes(5),
@@ -54,7 +54,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 		Post post3 = new Post(
 				"Inspirational Learning Quote",
 				"Never stop learning. Because if you stop learning" +
-						"You stop living",
+						"You stop living. (Common)",
 				"Inspirational",
 				new HashSet<>(Arrays.asList("ThinkMore", "StayAlive", "Advice")),
 				OffsetDateTime.now().minusHours(6),
@@ -63,7 +63,8 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 		Post post4 = new Post(
 				"A Helpful Advice",
 				"If you are going camping," +
-						" set your voicemail to where you are camping.",
+						" set your voicemail to where you are camping." +
+						"(Common)",
 				"Advice",
 				new HashSet<>(Arrays.asList("KeepSafe", "Helpful")),
 				OffsetDateTime.now().minusYears(5),
@@ -73,7 +74,7 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 				"Tips On How To Get Hired",
 				"To be more hire-able, you need to " +
 						"show that companies can trust you." +
-						" Build. More. Proof.",
+						" Build. More. Proof. (Common)",
 				"Advice",
 				new HashSet<>(Arrays.asList("Business", "JobHunting")),
 				OffsetDateTime.now().minusYears(3),

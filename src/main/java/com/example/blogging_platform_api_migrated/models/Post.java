@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "Post")
@@ -35,7 +33,8 @@ public class Post {
     private OffsetDateTime updatedAt;
 
     // declares that this is a collection of primitive Java types
-    @ElementCollection
+    // eager fetch type fetches the whole collection when parent is called
+    @ElementCollection(fetch = FetchType.EAGER)
     // creates another table called post_tags that has a column named post_id
     // containing the foreign key mapped to the @Id annotated attribute of the
     // parent class

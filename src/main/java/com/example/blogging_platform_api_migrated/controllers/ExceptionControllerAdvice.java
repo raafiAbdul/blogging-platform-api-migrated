@@ -1,7 +1,6 @@
 package com.example.blogging_platform_api_migrated.controllers;
 
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

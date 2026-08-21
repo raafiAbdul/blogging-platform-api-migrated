@@ -9,11 +9,14 @@ import java.util.List;
 
 public interface PostRepository extends CrudRepository<Post, Integer> {
 
-    @Query(value = "select distinct p from Post p left join fetch p.tags t" +
-            " where lower(p.title) like lower(concat('%', :term, '%'))" +
-            " or lower(content) like lower(concat('%', :term, '%'))" +
-            " or lower(category) like lower(concat('%', :term, '%'))" +
-            " or lower(t) like lower(concat('%', :term, '%'))")
+    @Query(value = "select distinct p from Post p left join fetch p.tags t " +
+            "where lower(p.title) like lower(concat('%', :term, '%')) " +
+            "or lower(content) like lower(concat('%', :term, '%')) " +
+            "or lower(category) like lower(concat('%', :term, '%')) " +
+            "or p.id in (" +
+            "       select p2.id from Post p2 left join p.tags t2" +
+            "       where lower(t2) like lower(concat('%', :term, '%'))" +
+            ")")
     List<Post> findByTerm(@Param("term") String term);
 }
 

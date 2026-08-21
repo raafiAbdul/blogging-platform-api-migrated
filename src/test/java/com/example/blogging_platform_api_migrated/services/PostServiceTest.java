@@ -105,7 +105,10 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
     void testGetAllPostsHappyFlow() {
         assertAll(
                 () -> assertEquals(3, postService.getPosts("Advice").size()),
-                () -> assertEquals(5, postService.getPosts(null).size())
+                () -> assertEquals(5, postService.getPosts(null).size()),
+                () -> assertEquals(5, postService.getPosts("").size()),
+                () -> assertEquals(2, postService.getPosts("Business")
+                        .getFirst().getTags().size())
         );
     }
 
