@@ -32,7 +32,7 @@ public class ExceptionControllerAdvice {
         }
 
         if(e instanceof NoSuchPostException n) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(n.getDetails());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(n.getDetails());
         }
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

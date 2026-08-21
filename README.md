@@ -12,6 +12,7 @@ from [roadmap](https://roadmap.sh/).
 - Migrated from Spring Data JDBC to Spring Data JPA
 - Used ```FETCH``` keyword in JPQL query for a custom function to mitigate the N+1 problem.
 - Used @ElementCollection annotation instead of Java's primitive array type to allow JPQL querying for portability.
+- Applied Integration Testing to confirm functions and cover edge cases.
 
 ## Prerequisites
 - **Java Development Kit (JDK 17+)**
