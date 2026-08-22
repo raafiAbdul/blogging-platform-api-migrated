@@ -53,4 +53,17 @@ public class PostResponseDto {
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    @Override
+    public String toString() {
+        String tagsString = (tags == null) ? null : tags.toString();
+
+        return "{id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", category='" + category + '\'' +
+                ", tags=" + "[" + tagsString + "]" +
+                ", created_at=" + createdAt.toString() +
+                ", updated_at=" + updatedAt.toString();
+    }
 }

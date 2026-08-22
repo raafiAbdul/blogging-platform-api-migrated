@@ -1,10 +1,22 @@
 package com.example.blogging_platform_api_migrated.dtos;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.util.Set;
 
 public final class PostRequestDto {
+
+    @NotNull
+    @Size(min = 3, max = 255)
     private final String title;
+
+    @NotNull
+    @Size(min = 3, max = 255)
     private final String content;
+
+    @NotNull
+    @Size(min = 3, max = 255)
     private final String category;
     private final Set<String> tags;
 

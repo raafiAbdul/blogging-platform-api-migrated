@@ -38,52 +38,57 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 () -> assertEquals("New Title", response.getTitle()),
                 () -> assertEquals("New Content", response.getContent()),
                 () -> assertEquals("New Category", response.getCategory()),
-                () -> assertEquals(4, response.getTags().size())
+                () -> assertEquals(2, response.getTags().size())
         );
 
     }
 
     @Test
     void testAddPostErrorFlow() {
-        PostRequestDto invalidRequest = new PostRequestDto(
-                "c", "a", "r", tags
-        );
-
-        assertThrows(ConstraintViolationException.class, () -> postService.addPost(invalidRequest));
+        assertThrows(ConstraintViolationException.class, () -> {
+            PostRequestDto invalidRequest = new PostRequestDto(
+                    "c", "a", "r", tags
+            );
+            postService.addPost(invalidRequest);
+        });
     }
 
     @Test
     void testUpdatePostHappyFlow() {
-        PostRequestDto newRequest = new PostRequestDto(
+        PostRequestDto updatedPost = new PostRequestDto(
                 "New Title",
                 "New Content",
                 "New Category",
                 tags
         );
-        PostResponseDto response = postService.updatePost(newRequest, 5);
+        PostResponseDto response = postService.updatePost(updatedPost, 5);
 
         assertAll(
                 () -> assertEquals(5, postRepository.count()),
                 () -> assertEquals("New Title", response.getTitle()),
                 () -> assertEquals("New Content", response.getContent()),
                 () -> assertEquals("New Category", response.getCategory()),
-                () -> assertEquals(4, response.getTags().size()),
+                () -> assertEquals(2, response.getTags().size()),
                 () -> assertEquals(5, response.getId())
         );
     }
 
     @Test
     void testUpdatePostErrorFlow() {
-        PostRequestDto invalidRequest = new PostRequestDto(
-                "c", "a", "r", tags
-        );
 
-        assertThrows(TransactionSystemException.class, () -> postService.updatePost(invalidRequest, 1));
+
+        assertThrows(TransactionSystemException.class, () -> {
+            PostRequestDto invalidRequest = new PostRequestDto(
+                    "c", "a", "r", tags
+            );
+            postService.updatePost(invalidRequest, 1);
+        });
     }
 
     @Test
     void testDeletePostHappyFlow() {
-        assertTrue(postService.deletePost(3));
+        postService.deletePost(3);
+        assertThrows(NoSuchPostException.class, () -> postService.getPostById(3));
     }
 
     @Test
@@ -103,18 +108,22 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Test
     void testGetAllPostsHappyFlow() {
+        postService.getPosts("Advice", 0, null).forEach(prdto -> System.out.println(prdto.toString()));
         assertAll(
-                () -> assertEquals(3, postService.getPosts("Advice").size()),
-                () -> assertEquals(5, postService.getPosts(null).size()),
-                () -> assertEquals(5, postService.getPosts("").size()),
-                () -> assertEquals(2, postService.getPosts("Business")
+                () -> assertEquals(3, postService.getPosts("Advice", 0, null).size()),
+                () -> assertEquals(5, postService.getPosts(null, null, null).size()),
+                () -> assertEquals(5, postService.getPosts("", 0, 10).size()),
+                () -> assertEquals(1, postService.getPosts("Business", 0, 10)
                         .getFirst().getTags().size()),
                 () -> assertTrue(
-                        postService.getPosts("Advice")
+                        postService.getPosts("Advice", 0, 10)
                                 .get(1).getTags().iterator().next().equals("KeepSafe") ||
-                                postService.getPosts("Advice").get(1)
+                                postService.getPosts("Advice", 0, 10).get(1)
                                         .getTags().iterator().next().equals("Helpful")
-                )
+                ),
+                () -> assertEquals(2, postService.getPosts(null, 0, 2).size()),
+                () -> assertEquals("Inspirational", postService.getPosts(null, 1, 2)
+                        .getFirst().getCategory())
         );
     }
 

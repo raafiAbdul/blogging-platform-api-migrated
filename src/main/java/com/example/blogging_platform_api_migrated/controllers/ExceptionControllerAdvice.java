@@ -14,27 +14,32 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception e) {
-
-        if (e instanceof ConstraintViolationException) {
-            ConstraintViolationException cve =  (ConstraintViolationException) e;
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<?> handleTransactionSystemException(TransactionSystemException e) {
+        Throwable cause = e.getRootCause();
+        if(cause instanceof ConstraintViolationException cve)  {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ConstraintViolationExceptionHelperMethod(cve));
         }
-
-        if(e instanceof TransactionSystemException) {
-            Throwable cause = ((TransactionSystemException)e).getRootCause();
-            if(cause instanceof ConstraintViolationException cve)  {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(ConstraintViolationExceptionHelperMethod(cve));
-            }
-        }
-
-        if(e instanceof NoSuchPostException n) {
+        if(cause instanceof NoSuchPostException n) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(n.getDetails());
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ConstraintViolationExceptionHelperMethod(e));
+    }
+
+    @ExceptionHandler(NoSuchPostException.class)
+    public ResponseEntity<?> handleNoSuchPostException(NoSuchPostException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getDetails());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 

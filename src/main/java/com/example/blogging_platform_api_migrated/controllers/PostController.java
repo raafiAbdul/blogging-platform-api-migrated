@@ -3,6 +3,7 @@ package com.example.blogging_platform_api_migrated.controllers;
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.services.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,6 @@ import java.util.List;
 @RestController
 public class PostController {
 
-    @Autowired
     private PostService postService;
 
     public PostController(PostService postService) {
@@ -21,7 +21,7 @@ public class PostController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<PostResponseDto> addPost(@RequestBody PostRequestDto postRequestDto) {
+    public ResponseEntity<PostResponseDto> addPost(@Valid @RequestBody PostRequestDto postRequestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(postService.addPost(postRequestDto));
@@ -47,9 +47,11 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(
-            @RequestParam(required = false) String term
+            @RequestParam(required = false) String term,
+            @RequestParam(required = false) int page,
+            @RequestParam(required = false) int size
     ) {
-        return ResponseEntity.ok().body(postService.getPosts(term));
+        return ResponseEntity.ok().body(postService.getPosts(term, page, size));
     }
 
 }

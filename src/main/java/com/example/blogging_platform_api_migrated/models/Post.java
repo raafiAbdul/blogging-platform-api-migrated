@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
-import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "Post")
@@ -116,13 +116,22 @@ public class Post {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
     public String toString() {
+        String tagsString = (tags == null) ? null : tags.toString();
+        if(createdAt == null) {
+            createdAt = OffsetDateTime.now();
+        }
         return "{id=" + id +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", category='" + category + '\'' +
-                ", tags=" + "[" + tags.toString() + "]" +
-                ", created_at=" + createdAt.toString() +
-                ", updated_at=" + updatedAt.toString();
+                ", tags=" + "[" + tagsString + "]" +
+                ", created_at=" + createdAt +
+                ", updated_at=" + updatedAt;
     }
 }

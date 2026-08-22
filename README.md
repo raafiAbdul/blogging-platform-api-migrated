@@ -12,8 +12,9 @@ from [roadmap](https://roadmap.sh/).
 - Migrated from Spring Data JDBC to Spring Data JPA
 - Used ```FETCH``` keyword in JPQL query for a custom function to mitigate the N+1 problem.
 - Used ```@ElementCollection``` annotation instead of Java's primitive array type to allow JPQL querying for portability.
-- Applied Integration Testing to confirm functions and cover edge cases.
+- Includes integration tests for PostController and PostService
 - Used ```@ExceptionHandler``` for global exception handling.
+- Moved constraints to DTO level
 
 ## Prerequisites
 - **Java Development Kit (JDK 17+)**
@@ -44,12 +45,16 @@ DB_PASSWORD = your_password
 ```
 
 ## API Endpoints
-- ```POST /posts``` Creates a new post
-- ```PUT /posts/{id}``` Updates a blog post
-- ```DELETE /posts/{id}``` Deletes a blog post
-- ```GET /posts``` Retrieves all blog posts
-- ```GET /posts/{id}``` Finds the blog post with that id
-- ```GET /posts?term={keyword}``` Finds posts with said keyword
+| Method | URL Path | Function |
+|:------:|:--------:|:--------:|
+|  ```POST```  |    ```/posts```      |     Creates a new post     |
+|  ```PUT```   |     ```/posts/{id}```     |     Updates a blog post     |
+| ```DELETE``` |     ``` posts/{id}```     |    Deletes a blog post      |
+|  ```GET```   |     ```/posts```     |    Retrieves all blog posts      |
+|  ```GET```   |     ```/posts/{id}```     |     Finds the blog post with that id     |
+|  ```GET```   |     ```/posts?term={keyword}```     |    Finds posts with said keyword      |
+|  ```GET```   |     ```/posts?page={page_number}&size={page_size}```     |    Finds posts with pagination      |
+|  ```GET```   |     ```/posts?term={keyword}&page={page_number}&size={page_size}```     |    Finds posts with said keyword and pagination      |
 
 ## Sample Usage and Diagrams
 ### Creating a Blog

@@ -5,7 +5,7 @@ import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
 import com.example.blogging_platform_api_migrated.models.Post;
 import com.example.blogging_platform_api_migrated.repositories.PostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,6 @@ import java.util.*;
 @Service
 public class PostService {
 
-    @Autowired
     private final PostRepository postRepository;
 
     public  PostService(PostRepository postRepository) {
@@ -67,18 +66,18 @@ public class PostService {
         post.setCategory(postRequestDto.getCategory());
         post.setTags(postRequestDto.getTags());
         post.setUpdatedAt(now);
+        postRepository.save(post);
 
         return  mapPostToResponseDto(post);
     }
 
     @Transactional
-    public boolean deletePost(int id) {
+    public void deletePost(int id) {
         if(postRepository.existsById(id)) {
             postRepository.deleteById(id);
         } else {
             throw new NoSuchPostException("No such post with id: " + id);
         }
-        return true;
     }
 
     @Transactional
@@ -92,16 +91,22 @@ public class PostService {
     }
 
     @Transactional
-    public List<PostResponseDto> getPosts(String term) {
+    public List<PostResponseDto> getPosts(String term, Integer page, Integer size) {
         List<PostResponseDto> posts = new ArrayList<>();
 
-        if(term == null || term.isEmpty()) {
+        if((term == null || term.isEmpty()) && size == null) {
             List<Post> postList = (List<Post>) postRepository.findAll();
             for(Post post : postList) {
                 posts.add(mapPostToResponseDto(post));
             }
-        } else {
+        } else if(size == null) {
             postRepository.findByTerm(term).forEach(post -> posts.add(mapPostToResponseDto(post)));
+        } else if(term == null) {
+            postRepository.findByPostIn(postRepository.findAll(), PageRequest.of(page, size))
+                    .forEach(post -> posts.add(mapPostToResponseDto(post)));
+        } else {
+            postRepository.findByPostIn(postRepository.findByTerm(term), PageRequest.of(page, size))
+                    .forEach(post -> posts.add(mapPostToResponseDto(post)));
         }
         return posts;
     }
