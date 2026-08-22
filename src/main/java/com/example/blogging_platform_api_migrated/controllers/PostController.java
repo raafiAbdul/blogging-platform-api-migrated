@@ -48,8 +48,8 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(
             @RequestParam(required = false) String term,
-            @RequestParam(required = false) int page,
-            @RequestParam(required = false) int size
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size
     ) {
         return ResponseEntity.ok().body(postService.getPosts(term, page, size));
     }

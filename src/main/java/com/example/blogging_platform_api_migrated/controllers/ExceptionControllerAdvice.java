@@ -1,5 +1,6 @@
 package com.example.blogging_platform_api_migrated.controllers;
 
+import com.example.blogging_platform_api_migrated.dtos.ErrorDetails;
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,15 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<?> handleTransactionSystemException(TransactionSystemException e) {
         Throwable cause = e.getRootCause();
+        ErrorDetails ed = new ErrorDetails(e.getMessage());
         if(cause instanceof ConstraintViolationException cve)  {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ConstraintViolationExceptionHelperMethod(cve));
         }
         if(cause instanceof NoSuchPostException n) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(n.getDetails());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ed.getDetails());
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ed.getDetails());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -35,12 +37,20 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(NoSuchPostException.class)
     public ResponseEntity<?> handleNoSuchPostException(NoSuchPostException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getDetails());
+        ErrorDetails ed = new ErrorDetails(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ed.getDetails());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        ErrorDetails ed = new ErrorDetails(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ed.getDetails());
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
+        ErrorDetails ed = new ErrorDetails(e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ed.getDetails());
     }
 
     private Map<String, String> ConstraintViolationExceptionHelperMethod(
