@@ -3,6 +3,9 @@ package com.example.blogging_platform_api_migrated;
 import com.example.blogging_platform_api_migrated.models.Post;
 import com.example.blogging_platform_api_migrated.repositories.PostRepository;
 import com.example.blogging_platform_api_migrated.services.PostService;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
@@ -30,6 +33,8 @@ public abstract class BloggingPlatformApiMigratedApplicationTests {
 
 	@BeforeAll
 	void init() {
+		ValidatorFactory  factory = Validation.buildDefaultValidatorFactory();
+		Validator validator = factory.getValidator();
 		postRepository.saveAll(generatePosts());
 	}
 

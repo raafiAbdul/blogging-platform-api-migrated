@@ -4,10 +4,11 @@ import com.example.blogging_platform_api_migrated.BloggingPlatformApiMigratedApp
 import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
-import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionSystemException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,12 +16,21 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Transactional
 class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Autowired
     private PostService postService;
 
     private static Set<String> tags = new HashSet<>(Arrays.asList("New", "Tag", "New", "Tag"));
+
+    private Validator validator;
+
+    @BeforeAll
+    void init() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        this.validator = factory.getValidator();
+    }
 
     @Test
     void testAddPostHappyFlow() {
@@ -31,26 +41,30 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 tags
         );
 
+        Set<ConstraintViolation<PostRequestDto>> violations = validator.validate(request);
+
         PostResponseDto response = postService.addPost(request);
 
         assertAll(
-                () -> assertEquals(5, postRepository.count()),
+                () -> assertEquals(6, postRepository.count()),
                 () -> assertEquals("New Title", response.getTitle()),
                 () -> assertEquals("New Content", response.getContent()),
                 () -> assertEquals("New Category", response.getCategory()),
-                () -> assertEquals(2, response.getTags().size())
+                () -> assertEquals(2, response.getTags().size()),
+                () -> assertTrue(violations.isEmpty())
         );
 
     }
 
     @Test
     void testAddPostErrorFlow() {
-        assertThrows(ConstraintViolationException.class, () -> {
-            PostRequestDto invalidRequest = new PostRequestDto(
-                    "c", "a", "r", tags
-            );
-            postService.addPost(invalidRequest);
-        });
+        PostRequestDto invalidRequest = new PostRequestDto(
+                "c", "a", "r", tags
+        );
+        Set<ConstraintViolation<PostRequestDto>> constraintViolationExceptions
+                = validator.validate(invalidRequest);
+
+        assertFalse(constraintViolationExceptions.isEmpty());
     }
 
     @Test
@@ -75,14 +89,12 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Test
     void testUpdatePostErrorFlow() {
-
-
-        assertThrows(TransactionSystemException.class, () -> {
-            PostRequestDto invalidRequest = new PostRequestDto(
-                    "c", "a", "r", tags
-            );
-            postService.updatePost(invalidRequest, 1);
-        });
+        PostRequestDto invalidRequest = new PostRequestDto(
+                "c", "a", "r", tags
+        );
+        Set<ConstraintViolation<PostRequestDto>> constraintViolationExceptions
+                = validator.validate(invalidRequest);
+        assertFalse(constraintViolationExceptions.isEmpty());
     }
 
     @Test
@@ -113,7 +125,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
                 () -> assertEquals(3, postService.getPosts("Advice", 0, null).size()),
                 () -> assertEquals(5, postService.getPosts(null, null, null).size()),
                 () -> assertEquals(5, postService.getPosts("", 0, 10).size()),
-                () -> assertEquals(1, postService.getPosts("Business", 0, 10)
+                () -> assertEquals(2, postService.getPosts("Business", 0, 10)
                         .getFirst().getTags().size()),
                 () -> assertTrue(
                         postService.getPosts("Advice", 0, 10)

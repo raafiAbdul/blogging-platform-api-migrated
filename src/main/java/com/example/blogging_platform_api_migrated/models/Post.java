@@ -15,16 +15,16 @@ public class Post {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private int id;
 
-    @NotNull
-    @Size(min = 3, max = 255)
+    // @NotNull
+    // @Size(min = 3, max = 255)
     private String title;
 
-    @NotNull
-    @Size(min = 3, max = 255)
+    // @NotNull
+    // @Size(min = 3, max = 255)
     private String content;
 
-    @NotNull
-    @Size(min = 3, max = 255)
+    // @NotNull
+    // @Size(min = 3, max = 255)
     private String category;
 
     @Column(name = "created_at")
