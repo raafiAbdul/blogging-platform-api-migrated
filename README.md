@@ -15,7 +15,8 @@ from [roadmap](https://roadmap.sh/).
 - Includes integration tests for PostController and PostService
 - Used ```@ExceptionHandler``` for global exception handling.
 - Moved constraints to DTO level
-- Used ```@Transactional``` for the PostService test class to rollback each test method's effects on the database
+- Used ```@Transactional``` for the PostService test class to roll back each test method's effects on the database
+  - Used the ```countQuery``` attribute of ```@Query``` to optimize performance
 
 ## Prerequisites
 - **Java Development Kit (JDK 17+)**
