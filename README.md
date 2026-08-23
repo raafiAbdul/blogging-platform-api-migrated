@@ -4,7 +4,7 @@ the [Blogging Platform API](https://roadmap.sh/projects/blogging-platform-api) b
 from [roadmap](https://roadmap.sh/).
 
 ## Technologies used
-- **Language:** Java 17+
+- **Language:** Java 25+
 - **Database:** PostgreSQL 18+
 - **Database Access:** Spring Data JPA
 
@@ -19,7 +19,7 @@ from [roadmap](https://roadmap.sh/).
 - Used the ```countQuery``` attribute of ```@Query``` to optimize performance
 
 ## Prerequisites
-- **Java Development Kit (JDK 17+)**
+- **Java Development Kit (JDK 25+)**
 - **PostgreSQL 18+** for the database
 - **Maven** as the build tool
 - **Postman** or **cURL** for API testing
