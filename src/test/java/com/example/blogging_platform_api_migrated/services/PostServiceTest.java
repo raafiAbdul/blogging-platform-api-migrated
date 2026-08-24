@@ -5,13 +5,14 @@ import com.example.blogging_platform_api_migrated.dtos.PostRequestDto;
 import com.example.blogging_platform_api_migrated.dtos.PostResponseDto;
 import com.example.blogging_platform_api_migrated.exceptions.NoSuchPostException;
 import jakarta.validation.*;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     private Validator validator;
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
@@ -120,22 +121,25 @@ class PostServiceTest extends BloggingPlatformApiMigratedApplicationTests {
 
     @Test
     void testGetAllPostsHappyFlow() {
-        postService.getPosts("Advice", 0, null).forEach(prdto -> System.out.println(prdto.toString()));
+        List<PostResponseDto> advicePostsNoLimit = postService.getPosts("Advice", 0, null);
+        List<PostResponseDto> advicePosts = postService.getPosts("Advice", 0, 10);
+        List<PostResponseDto> allPosts = postService.getPosts(null, null, null);
+        List<PostResponseDto> emptyPosts = postService.getPosts("", 0, 10);
+        List<PostResponseDto> businessPosts = postService.getPosts("Business", 0, 10);
+        List<PostResponseDto> firstPage = postService.getPosts(null, 0, 2);
+        List<PostResponseDto> secondPage = postService.getPosts(null, 1, 2);
+
         assertAll(
-                () -> assertEquals(3, postService.getPosts("Advice", 0, null).size()),
-                () -> assertEquals(5, postService.getPosts(null, null, null).size()),
-                () -> assertEquals(5, postService.getPosts("", 0, 10).size()),
-                () -> assertEquals(2, postService.getPosts("Business", 0, 10)
-                        .getFirst().getTags().size()),
+                () -> assertEquals(3, advicePostsNoLimit.size()),
+                () -> assertEquals(5, allPosts.size()),
+                () -> assertEquals(5, emptyPosts.size()),
+                () -> assertEquals(2, businessPosts.get(0).getTags().size()),
                 () -> assertTrue(
-                        postService.getPosts("Advice", 0, 10)
-                                .get(1).getTags().iterator().next().equals("KeepSafe") ||
-                                postService.getPosts("Advice", 0, 10).get(1)
-                                        .getTags().iterator().next().equals("Helpful")
+                        advicePosts.get(1).getTags().iterator().next().equals("KeepSafe") ||
+                                advicePosts.get(1).getTags().iterator().next().equals("Helpful")
                 ),
-                () -> assertEquals(2, postService.getPosts(null, 0, 2).size()),
-                () -> assertEquals("Inspirational", postService.getPosts(null, 1, 2)
-                        .getFirst().getCategory())
+                () -> assertEquals(2, firstPage.size()),
+                () -> assertEquals("Inspirational", secondPage.get(0).getCategory())
         );
     }
 
