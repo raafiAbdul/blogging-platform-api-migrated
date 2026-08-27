@@ -26,9 +26,3 @@ public interface PostRepository extends CrudRepository<Post, Integer> {
     @Query(value = "select p from Post p where p in :collection")
     Page<Post> findByPostIn(@Param("collection") Iterable<Post> collection, Pageable pageable);
 }
-
-// lower(concat('%', :term, '%')) - lower case "% :term %"
-// left join - left outer join
-// fetch - removes n+1 problem by fetching the lazily
-//      fetched tags table in one query (with the parent table)
-// p.tags t - gives the column p.tags an identifier
