@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@RestController("/api/v1")
 public class PostController {
 
     private final PostService postService;
@@ -19,6 +19,7 @@ public class PostController {
         this.postService = postService;
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/posts")
     public ResponseEntity<PostResponseDto> addPost(@Valid @RequestBody PostRequestDto postRequestDto) {
         return ResponseEntity
@@ -26,6 +27,7 @@ public class PostController {
                 .body(postService.addPost(postRequestDto));
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/posts/{id}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable int id, @Valid @RequestBody PostRequestDto postRequestDto) {
@@ -33,17 +35,20 @@ public class PostController {
                 .ok().body(postService.updatePost(postRequestDto, id));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<PostResponseDto> deletePost(@PathVariable int id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/posts/{id}")
     public ResponseEntity<PostResponseDto> getPostById(@PathVariable int id) {
         return ResponseEntity.ok().body(postService.getPostById(id));
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/posts")
     public ResponseEntity<List<PostResponseDto>> getAllPosts(
             @RequestParam(required = false) String term,

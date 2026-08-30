@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(TransactionSystemException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleTransactionSystemException(TransactionSystemException e) {
         Throwable cause = e.getRootCause();
         ErrorDetails ed = new ErrorDetails(e.getMessage());
@@ -29,24 +31,28 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ed.getDetails());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ConstraintViolationExceptionHelperMethod(e));
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchPostException.class)
     public ResponseEntity<?> handleNoSuchPostException(NoSuchPostException e) {
         ErrorDetails ed = new ErrorDetails(e.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ed.getDetails());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e) {
         ErrorDetails ed = new ErrorDetails(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ed.getDetails());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<?> handleIllegalStateException(IllegalStateException e) {
         ErrorDetails ed = new ErrorDetails(e.getMessage());

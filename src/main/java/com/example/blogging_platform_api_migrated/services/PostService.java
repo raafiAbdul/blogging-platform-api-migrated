@@ -94,17 +94,17 @@ public class PostService {
         List<PostResponseDto> posts = new ArrayList<>();
 
         if((term == null || term.isEmpty()) && size == null) {
-            List<Post> postList = (List<Post>) postRepository.findAll();
-            for(Post post : postList) {
-                posts.add(mapPostToResponseDto(post));
-            }
+            postRepository.findAll(PageRequest.of(0, 50))
+                    .forEach(e -> posts.add(mapPostToResponseDto(e)));
+
         } else if(size == null) {
-            postRepository.findByTerm(term).forEach(post -> posts.add(mapPostToResponseDto(post)));
+            postRepository.findByTerm(term, PageRequest.of(0, 50))
+                    .forEach(post -> posts.add(mapPostToResponseDto(post)));
         } else if(term == null) {
-            postRepository.findByPostIn(postRepository.findAll(), PageRequest.of(page, size))
+            postRepository.findAll(PageRequest.of(page, size))
                     .forEach(post -> posts.add(mapPostToResponseDto(post)));
         } else {
-            postRepository.findByPostIn(postRepository.findByTerm(term), PageRequest.of(page, size))
+            postRepository.findByTerm(term, PageRequest.of(page, size))
                     .forEach(post -> posts.add(mapPostToResponseDto(post)));
         }
         return posts;

@@ -25,14 +25,8 @@ public class Post {
     @Column(name = "updated_at")
     private OffsetDateTime updatedAt;
 
-    // declares that this is a collection of primitive Java types
-    // eager fetch type fetches the whole collection when parent is called
     @ElementCollection(fetch = FetchType.EAGER)
-    // creates another table called post_tags that has a column named post_id
-    // containing the foreign key mapped to the @Id annotated attribute of the
-    // parent class
     @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
-    // names the column that stores the actual collection of text tags
     @Column(name = "tags")
     private Set<String> tags;
 
