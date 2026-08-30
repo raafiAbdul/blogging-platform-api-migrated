@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 title = "Blogging Platform API - raafiAbdul",
                 description = "A simple CRUD RESTful API for blogs that demonstrates " +
-                        "usage Spring Boot and Spring Boot."
+                        "usage Spring Boot and Spring Data JPA."
         ),
         servers = @Server(
                 description = "Local ENV",
