@@ -91,18 +91,16 @@ public class PostService {
 
     @Transactional
     public List<PostResponseDto> getPosts(String term, Integer page, Integer size) {
+
+        page = (page == null || page < 0) ? 0 : page;
+        size = (size == null || size <= 0) ? 50 : size;
+
         List<PostResponseDto> posts = new ArrayList<>();
 
-        if((term == null || term.isEmpty()) && size == null) {
-            postRepository.findAll(PageRequest.of(0, 50))
+        if(term == null || term.isEmpty()) {
+            postRepository.findAll(PageRequest.of(page, size))
                     .forEach(e -> posts.add(mapPostToResponseDto(e)));
 
-        } else if(size == null) {
-            postRepository.findByTerm(term, PageRequest.of(0, 50))
-                    .forEach(post -> posts.add(mapPostToResponseDto(post)));
-        } else if(term == null) {
-            postRepository.findAll(PageRequest.of(page, size))
-                    .forEach(post -> posts.add(mapPostToResponseDto(post)));
         } else {
             postRepository.findByTerm(term, PageRequest.of(page, size))
                     .forEach(post -> posts.add(mapPostToResponseDto(post)));
