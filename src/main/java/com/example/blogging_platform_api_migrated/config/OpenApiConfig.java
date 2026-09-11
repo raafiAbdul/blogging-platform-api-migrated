@@ -15,10 +15,16 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 description = "A simple CRUD RESTful API for blogs that demonstrates " +
                         "usage Spring Boot and Spring Data JPA."
         ),
-        servers = @Server(
-                description = "Local ENV",
-                url = "http://localhost:8080"
-        )
+        servers = {
+                @Server(
+                        description = "Local ENV",
+                        url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "Deployed ENV",
+                        url = "https://blogging-platform-api-migrated-production.up.railway.app/"
+                )
+        }
 )
 public class OpenApiConfig {
 
