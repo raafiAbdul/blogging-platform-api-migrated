@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "Deployed ENV",
-                        url = "https://blogging-platform-api-migrated-production.up.railway.app/"
+                        url = "https://blogging-platform-api-migrated-production.up.railway.app"
                 )
         }
 )
